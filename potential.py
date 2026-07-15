@@ -8,14 +8,14 @@ def convergence(potential_old: float, potential_new: float) -> float:
     difference = np.max(np.abs(potential_new - potential_old))
     return difference
 
-def jacobi() -> list:
+def jacobi(M: list) -> list:
     """
     Generate an array that contains the potential inside a box of size N,
     using an ansatz of 0 potential.
     """
 
     # Create a copy of the initial potential distribution (ansatz)
-    P = np.copy(const.ansatz)
+    P = np.copy(M)
     
     # Iterate until the potential field converges within the desired tolerance
     difference = 1
@@ -33,14 +33,14 @@ def jacobi() -> list:
             while n < const.N:
 
                 # Convert 2D grid coordinates (m,n) into a 1D array index
-                index = m*(const.N+1)+n
+                index = m*(const.N+2)+n
 
                 # Apply finite difference approximation of Laplace's equation
                 P[index] = 0.25*(
                     old[index+1]+
                     old[index-1]+
-                    old[index+(const.N+1)]+
-                    old[index-(const.N+1)]
+                    old[index+(const.N+2)]+
+                    old[index-(const.N+2)]
                 )
 
                 n += 1
@@ -48,7 +48,14 @@ def jacobi() -> list:
             m += 1
         difference = convergence(old, P)
     
-    print(P)
-    return P
+    grid = P.reshape((const.N+2), (const.N+2))
 
-jacobi()
+    interior = grid[1:-1, 1:-1]
+
+    print(interior)
+    return interior
+
+boundary = const.boundaries("normal")
+ansatz = boundary.get_values()
+
+jacobi(ansatz)
