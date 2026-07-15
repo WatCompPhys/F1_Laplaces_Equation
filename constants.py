@@ -6,10 +6,10 @@ ansatz = np.zeros((N+1)*(N+1))
 tolerance = 0.0001
 
 # Boundary Conditions
-T = 10
-B = 20
+T = 100
+B = 100
 L = 100
-R = 50
+R = 100
 
 # Top
 m = 0
@@ -37,3 +37,7 @@ n = 0
 while n <= N:
     ansatz[n*(N+1)+N] = R
     n += 1
+
+x=np.linspace(N,N,128)
+def T_0(X):
+    return x
