@@ -50,10 +50,8 @@ def jacobi(M: list) -> list:
     
     grid = P.reshape((const.N+2), (const.N+2))
 
-    interior = grid[1:-1, 1:-1]
-
-    print(interior)
-    return interior
+    print(grid)
+    return grid
 
 boundary = const.boundaries("normal")
 ansatz = boundary.get_values()
