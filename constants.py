@@ -1,7 +1,7 @@
 import numpy as np
 
-N = 10
-tolerance = 0.0001
+N =52
+tolerance = 1e-6
 
 class boundaries:
     def __init__(self, distribution):
