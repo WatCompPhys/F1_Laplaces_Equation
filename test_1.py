@@ -37,7 +37,6 @@ def laplacian_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
     print(f"PERFORMANCE: Runtime = {(finish_time - start_time):.1f} sec ()")
 
 
-
     return None
 
 laplacian_free_test(10, constants.N + 2)
@@ -84,7 +83,6 @@ def test_loop(L, num_cells, tmax, dt):
         t += dt 
 
     print(f"TEST: phi is laplacian-free | PASS = {np.allclose(laplace_phi, np.zeros_like(laplace_phi), rtol = 1e-3, atol = 1e-6)}")
-    print(f"Max deviation from zero of laplacian(phi) = {np.max(np.abs(phi - np.zeros_like(phi)))}")
     test_particle.plot_path(phi, X, Y)
 
 
