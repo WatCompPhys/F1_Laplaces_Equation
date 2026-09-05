@@ -4,9 +4,9 @@ import numpy as np
 import constants
 import time
 
-#TEST 1: DIVERGENCE FREE OF COMPUTED POTENTIAL FIELD 
+#TEST 1: LAPLACIAN-FREE OF COMPUTED POTENTIAL FIELD 
 
-def curvature_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
+def laplacian_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
     start_time = time.time()
     print(f"Laplacian-Free Test initialted at t = {start_time}")
     X, Y = np.linspace(0, L, num_cells), np.linspace(0, L, num_cells)
