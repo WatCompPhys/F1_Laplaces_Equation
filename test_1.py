@@ -32,9 +32,9 @@ def laplacian_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
     print(f"Laplacian-Free Test concluded at t = {finish_time}")
 
     print(30 * "\n"+f"*************** LAPLACIAN-FREE TEST RESULTS ***************")
-    print(f"TEST: phi is laplacian-free | PASS? = {np.allclose(laplace_phi, np.zeros_like(laplace_phi), atol = atol)} (with tolerance = {atol})")
-    print(f"ANALYSIS: \nMax deviation from zero of laplacian(phi) = {np.max(np.abs(phi - np.zeros_like(phi)))}\nMean deviation from zero of laplacian(phi) = {np.mean(np.abs(phi - np.zeros_like(phi)))}")
-    print(f"PERFORMANCE: Runtime = {(finish_time - start_time):.1f} sec")
+    print(f"\nPASS? = {np.allclose(laplace_phi, np.zeros_like(laplace_phi), atol = atol)} \nTEST DESCRIPTION: Evaluates whether phi is Laplacian-free to within a specfied numerical tolerance  (atol = {atol})\n")
+    print(f"ANALYSIS: \nMax deviation from zero for laplacian(phi) = {np.max(np.abs(laplace_phi - np.zeros_like(laplace_phi)))}\nMean deviation from zero for laplacian(phi) = {np.mean(np.abs(laplace_phi - np.zeros_like(laplace_phi)))}")
+    print(f"PERFORMANCE: Runtime = {(finish_time - start_time):.1f} sec ()")
 
 
 
