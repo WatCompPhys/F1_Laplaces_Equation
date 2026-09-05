@@ -40,7 +40,14 @@ def laplacian_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
 
     return None
 
-curvature_free_test(10, constants.N + 2)
+laplacian_free_test(10, constants.N + 2)
+
+
+
+
+
+
+
 
 
 
