@@ -26,11 +26,11 @@ def jacobi(M: list) -> list:
 
         # x-coordinate loop
         m = 1
-        while m < const.N:
+        while m <= const.N:
 
             # y-coordinate loop
             n = 1
-            while n < const.N:
+            while n <= const.N:
 
                 # Convert 2D grid coordinates (m,n) into a 1D array index
                 index = m*(const.N+2)+n

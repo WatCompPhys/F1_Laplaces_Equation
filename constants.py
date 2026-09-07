@@ -31,7 +31,7 @@ class boundaries:
         # left and right
         for i in range(N+2):
             self.grid[i*(N+2)] = self.values[i]
-            self.grid[i*(N+2)+N] = self.values[i]
+            self.grid[i*(N+2)+(N+1)] = self.values[i]
 
     def get_values(self, new_values=None):
         if self.first_time:
@@ -40,7 +40,3 @@ class boundaries:
         else:
             self.values = new_values
             return self.grid
-
-class particle:
-    def __init__(self):
-        return
