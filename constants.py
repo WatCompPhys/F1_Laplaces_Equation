@@ -40,3 +40,7 @@ class boundaries:
         else:
             self.values = new_values
             return self.grid
+
+class particle:
+    def __init__(self):
+        return
