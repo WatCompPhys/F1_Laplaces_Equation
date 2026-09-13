@@ -1,5 +1,5 @@
 from particle_class import particle
-from potential import jacobi
+from potential_class import potential
 from video import video
 import numpy as np 
 import constants
@@ -71,7 +71,7 @@ def laplacian_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
     phi[0, :] = Top 
     phi[-1, :] = Bottom
 
-    phi = jacobi(phi.flatten())
+    phi = potential.jacobi(phi.flatten())
     laplace_phi = 1/(dL**2) * (phi[2:, 1:-1] + phi[:-2, 1:-1] + phi[1:-1, 2:] + phi[1:-1, :-2] - 4 * phi[1:-1, 1:-1]) #judge the interior points
 
     finish_time = time.time()
@@ -86,17 +86,6 @@ def laplacian_free_test(L, num_cells, atol = 1e-3): #keep atol = 1e-3 or less
     return None
 
 # laplacian_free_test(10, constants.N + 2)
-
-
-
-
-
-
-
-
-
-
-
 
 
 #DEMONSTRATION 1: Static field, moving particle, plot
@@ -117,7 +106,7 @@ def test_loop_1(L, num_cells, tmax, dt):
     phi[0, :] = T 
     phi[-1, :] = B
 
-    phi = jacobi(phi.flatten())
+    phi = potential.jacobi(phi.flatten())
 
     test_particle = particle(1.0, 1.0, [2.8, 0.1]) # [X[len(X)//2],Y[len(Y)//3]]
 
@@ -148,19 +137,20 @@ def test_loop_2(L, num_cells, tmax, dt):
     # Left = np.exp(Y / L)
     # Right = np.exp((L - Y) / L)
 
-    Bottom = np.random.uniform(-1, 1, num_cells)
-    Top = np.random.uniform(-1, 1, num_cells)
-    Left = np.random.uniform(-1, 1, num_cells)
-    Right = np.random.uniform(-1, 1, num_cells)
+    Bottom = np.sin(2 * np.pi * X / L) + np.cos(4 * np.pi * X / L)
+    Top = np.sin(2 * np.pi * X / L) - np.cos(4 * np.pi * X / L)
+
+    Left = np.sin(2 * np.pi * Y / L) + np.cos(4 * np.pi * Y / L)
+    Right = np.sin(2 * np.pi * Y / L) - np.cos(4 * np.pi * Y / L)
 
     phi[:, 0] = Left
     phi[:, -1] = Right
     phi[0, :] = Top
     phi[-1, :] = Bottom
 
-    phi = jacobi(phi.flatten())
+    phi = potential.jacobi(phi.flatten())
 
-    test_particle = particle(1.0, 1.0, [3.0, 0.1]) # [X[len(X)//2],Y[len(Y)//3]]
+    test_particle = particle(1.0, 1.0, [2.4, 0.1]) # [X[len(X)//2],Y[len(Y)//3]]
 
     laplace_phi = 1/(dL**2) * (phi[2:, 1:-1] + phi[:-2, 1:-1] + phi[1:-1, 2:] + phi[1:-1, :-2] - 4 * phi[1:-1, 1:-1]) #judge the interior points
     t = 0 
