@@ -6,8 +6,8 @@ class particle:
         self.mass = mass 
         self.charge = charge 
         self.position = np.array(init_pos) #[x,y]
-        self.posn_hist_x = []
-        self.posn_hist_y = []
+        self.posn_hist_x = [self.position[0]]
+        self.posn_hist_y = [self.position[1]]
         self.velocity = np.array([0.0, 0.0]) #[vx, vy]
         self.exit_box = False
 
