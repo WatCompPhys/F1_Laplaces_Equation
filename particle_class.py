@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class particle:
-    def __init__(self, mass = 1, charge = 1, init_pos = [0.0, 0.0]):
+    def __init__(self, mass = 1, charge = 1, init_pos = [0.0, 0.0]) -> None:
         self.mass = mass 
         self.charge = charge 
         self.position = np.array(init_pos) #[x,y]
@@ -11,7 +11,7 @@ class particle:
         self.velocity = np.array([0.0, 0.0]) #[vx, vy]
         self.exit_box = False
 
-    def get_accels(self, phi,  dL, dt,  X, Y):
+    def get_accels(self, phi: list,  dL: float, dt: float,  X: list, Y: list) -> list:
         """
         phi is the potential field, dL is the grid spacing and dt is the timestep. 
         X and Y are 1D arrays of the axes 
@@ -33,7 +33,10 @@ class particle:
 
         return accel
 
-    def update_pos(self, phi, dL, dt, X, Y):
+    def update_pos(self, phi: list, dL: float, dt: float, X: list, Y:list) -> None:
+        """
+        updates the position of the particle at every timestep based on the potential field phi
+        """
         if self.position[0] >= np.max(X) or self.position[1] >= np.max(Y) or self.position[0] <= np.min(X) or self.position[1] <= np.min(Y):
             self.velocity = np.array([0, 0])
             print("Particle has reached the end of the plates.")
@@ -48,7 +51,10 @@ class particle:
         self.posn_hist_x.append(self.position[0])
         self.posn_hist_y.append(self.position[1])
 
-    def plot_path(self, phi = None, X = None, Y = None):
+    def plot_path(self, phi = None, X = None, Y = None) -> None:
+        """
+        Generates a static plot of the particles path.
+        """
         if phi is not None and X is not None and Y is not None:
             col = plt.imshow(phi, extent = [np.min(X), np.max(X),np.min(Y), np.max(Y) ], origin = "lower", cmap = "magma")
             plt.colorbar(label="Potential")
