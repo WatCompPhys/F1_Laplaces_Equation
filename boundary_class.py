@@ -2,7 +2,12 @@ import numpy as np
 import constants as const
 
 class boundaries:
-    def __init__(self, distribution):
+    """
+    Applies boundary conditions to a grid based on 
+    distribution selection for first timestep.
+    And input values on subsequent timestep
+    """
+    def __init__(self, distribution: str) -> None:
         self.grid = np.zeros((const.N+2)*(const.N+2))
 
         x = np.arange(const.N + 2)
@@ -21,26 +26,48 @@ class boundaries:
 
         elif distribution == "zeros":
             self.values = np.zeros(const.N + 2)
-        
-        self.apply_boundary()
+
         self.first_time = True
+        self.apply_boundary()
 
-    def apply_boundary(self):
-        # top and bottom
-        for i in range(const.N + 2):
-            self.grid[i] = self.values[i]
-            self.grid[(const.N + 1) * (const.N + 2) + i] = self.values[i]
+    def apply_boundary(self) -> None:
+        """
+        Applies boundary conditions to grid based on values provided.
+        """
+        if self.first_time:
+            # bottom and top
+            for i in range(const.N + 2):
+                self.grid[i] = self.values[i]
+                self.grid[(const.N + 1) * (const.N + 2) + i] = self.values[i]
 
-        # left and right
-        for i in range(const.N + 2):
-            self.grid[i * (const.N + 2)] = self.values[i]
-            self.grid[i * (const.N + 2) + (const.N + 1)] = self.values[i]
+            # left and right
+            for i in range(const.N + 2):
+                self.grid[i * (const.N + 2)] = self.values[i]
+                self.grid[i * (const.N + 2) + (const.N + 1)] = self.values[i]
 
-    def get_values(self, new_values=None):
+        else:
+            # top
+            for i in range(const.N + 2):
+                self.grid[(const.N + 1) * (const.N + 2) + i] = self.new_values[2]
+            # bottom
+            for i in range(const.N + 2):
+                self.grid[i] = self.new_values[3]
+
+            # right
+            for i in range(const.N + 2):
+                self.grid[i * (const.N + 2) + (const.N + 1)] = self.new_values[0]
+            # left
+            for i in range(const.N + 2):
+                self.grid[i * (const.N + 2)] = self.new_values[1]
+
+    def get_values(self, new_values=None) -> list:
+        """
+        Determines which timestep is currently running and returns grid
+        """
         if self.first_time:
             self.first_time = False
             return self.grid
         else:
-            self.values = new_values
+            self.new_values = new_values
             self.apply_boundary()
             return self.grid

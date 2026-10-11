@@ -6,6 +6,7 @@ from boundary_class import boundaries
 from potential_class import potential
 from particle_class import particle
 from video import video
+from step_potential_switching import step_switching
 
 st.title("Particle in Box Simulation")
 
@@ -35,19 +36,34 @@ L = st.number_input(
     step=1.0
 )
 
-particle_x = st.number_input(
+x = st.number_input(
     "Particle x position",
     min_value=0.0,
     max_value=float(L),
     value=float(L / 2)
 )
 
-particle_y = st.number_input(
+y = st.number_input(
     "Particle y position",
     min_value=0.0,
     max_value=float(L),
     value=float(L / 2)
 )
+
+x_0 = st.number_input(
+    "Particle x position destination",
+    min_value=0.0,
+    max_value=float(L),
+    value=float(L / 2)
+)
+
+y_0 = st.number_input(
+    "Particle y position destination",
+    min_value=0.0,
+    max_value=float(L),
+    value=float(L / 2)
+)
+
 
 particle_mass = st.number_input(
     "Particle mass",
@@ -87,6 +103,7 @@ if st.button("Run Simulation"):
 
         # Solve Laplace equation
         phi = potential.jacobi(M)
+        phi_history = [phi.copy()]
 
         # Coordinate system
         X = np.linspace(0, L, const.N + 2)
@@ -98,13 +115,27 @@ if st.button("Run Simulation"):
         p = particle(
             mass=particle_mass,
             charge=particle_charge,
-            init_pos=[particle_x, particle_y]
+            init_pos=[x, y]
         )
 
         # Particle simulation
         dt = 0.01
+        max_steps = 10000
+        steps = 0
 
-        while not p.exit_box:
+        disp_x = x - x_0
+        disp_y = y - y_0
+
+        while (not p.exit_box
+               and (abs(disp_x) > .25 or abs(disp_y) > .25)
+               and steps < max_steps
+        ):
+
+            new_values = step_switching(x, y, x_0, y_0)
+            M = boundary.get_values(new_values)
+
+            phi = potential.jacobi(M)
+            phi_history.append(phi.copy())
 
             p.update_pos(
                 phi,
@@ -114,13 +145,20 @@ if st.button("Run Simulation"):
                 Y
             )
 
+            x = p.position[0]
+            y = p.position[1]
+            
+            disp_x = x - x_0
+            disp_y = y - y_0
+
+            steps += 1
 
         print("Number of particle positions:", len(p.posn_hist_x))
         print("Starting video...")
         # Generate video
         video(
             p,
-            phi,
+            phi_history,
             X,
             Y,
             num_frames
