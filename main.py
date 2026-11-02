@@ -1,9 +1,8 @@
-import os
+import time
 import numpy as np
 import streamlit as st
 import constants as const
-from boundary_class import boundaries
-from potential_class import potential
+import Potential
 from particle_class import particle
 from video import video
 from step_potential_switching import step_switching
@@ -94,15 +93,16 @@ distribution = st.selectbox(
 )
 
 if st.button("Run Simulation"):
-
+    # Start the timer
+    start_time = time.perf_counter()
     with st.spinner("Running simulation..."):
 
         #Boundary Conditions
-        boundary = boundaries(distribution)
-        M = boundary.get_values()
+        grid = np.zeros((const.N+2)*(const.N+2))
+        grid, first_time = Potential.get_values(distribution, grid, first_time=True)
 
         # Solve Laplace equation
-        phi = potential.jacobi(M)
+        phi = Potential.jacobi(grid)
         phi_history = [phi.copy()]
 
         # Coordinate system
@@ -132,9 +132,9 @@ if st.button("Run Simulation"):
         ):
 
             new_values = step_switching(x, y, x_0, y_0)
-            M = boundary.get_values(new_values)
+            grid, first_time = Potential.get_values(distribution, grid, first_time, new_values)
 
-            phi = potential.jacobi(M)
+            phi = Potential.jacobi(grid)
             phi_history.append(phi.copy())
 
             p.update_pos(
@@ -168,3 +168,9 @@ if st.button("Run Simulation"):
 
     # Display video
     st.video("particle.mp4")
+
+    # Stop the timer
+    end_time = time.perf_counter()
+
+    elapsed_time = end_time - start_time
+    print(f"Executed in: {elapsed_time:.4f} seconds")
