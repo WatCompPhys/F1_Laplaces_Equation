@@ -25,29 +25,24 @@ def boundaries(distribution):
     
     return values
 
-def apply_boundary(grid, values, first_time) -> None:
+def apply_boundary(grid, values, first_time):
     """
     Applies boundary conditions to grid based on values provided.
     """
-    if first_time:
-        for i in range(const.N + 2):
-            # bottom and top
-            grid[i] = values[i]
-            grid[(const.N + 1) * (const.N + 2) + i] = values[i]
+    phi = grid.reshape((const.N + 2, const.N + 2))
 
-            # left and right
-            grid[i * (const.N + 2)] = values[i]
-            grid[i * (const.N + 2) + (const.N + 1)] = values[i]
+    if first_time:
+        phi[0, :] = values
+        phi[-1, :] = values
+        phi[:, 0] = values
+        phi[:, -1] = values
 
     else:
-        for i in range(const.N + 2):
-            # top and bottom
-            grid[(const.N + 1) * (const.N + 2) + i] = values[2]
-            grid[i] = values[3]
-
-            # right and left
-            grid[i * (const.N + 2) + (const.N + 1)] = values[0]
-            grid[i * (const.N + 2)] = values[1]
+        # top, bottom, left, right
+        phi[0, :] = values[3]
+        phi[-1, :] = values[2]
+        phi[:, 0] = values[1]
+        phi[:, -1] = values[0]
 
     return grid
 
