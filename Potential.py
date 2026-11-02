@@ -3,9 +3,8 @@ import constants as const
 
 def boundaries(distribution):
     """
-    Applies boundary conditions to a grid based on 
+    Provides boundary values based on 
     distribution selection for first timestep.
-    And input values on subsequent timestep
     """
     x = np.arange(const.N + 2)
 
