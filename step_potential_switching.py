@@ -1,5 +1,3 @@
-from boundary_class import boundaries
-
 def step_switching(x: float, y: float, x_0: float, y_0: float) -> list:
     """
     Returns potential values based on input locations,

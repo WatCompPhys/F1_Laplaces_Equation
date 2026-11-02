@@ -1,0 +1,99 @@
+import numpy as np
+import constants as const
+
+def boundaries(distribution):
+    """
+    Applies boundary conditions to a grid based on 
+    distribution selection for first timestep.
+    And input values on subsequent timestep
+    """
+    x = np.arange(const.N + 2)
+
+    if distribution == "gaussian":
+        values = np.exp(-((x - const.N/2) / (const.N/5))**2)
+
+    elif distribution == "sinusoidal":
+        values = np.sin(np.pi * x / (const.N + 1))
+
+    elif distribution == "parabolic":
+        values = 1 - ((x - const.N/2) / (const.N/2))**2
+
+    elif distribution == "linear":
+        values = x / (const.N + 1)
+
+    elif distribution == "zeros":
+        values = np.zeros(const.N + 2)
+    
+    return values
+
+def apply_boundary(grid, values, first_time) -> None:
+    """
+    Applies boundary conditions to grid based on values provided.
+    """
+    if first_time:
+        for i in range(const.N + 2):
+            # bottom and top
+            grid[i] = values[i]
+            grid[(const.N + 1) * (const.N + 2) + i] = values[i]
+
+            # left and right
+            grid[i * (const.N + 2)] = values[i]
+            grid[i * (const.N + 2) + (const.N + 1)] = values[i]
+
+    else:
+        for i in range(const.N + 2):
+            # top and bottom
+            grid[(const.N + 1) * (const.N + 2) + i] = values[2]
+            grid[i] = values[3]
+
+            # right and left
+            grid[i * (const.N + 2) + (const.N + 1)] = values[0]
+            grid[i * (const.N + 2)] = values[1]
+
+    return grid
+
+def get_values(distribution, grid, first_time, new_values=None) -> list:
+    """
+    Determines which timestep is currently running and returns grid
+    """
+    if first_time:
+        new_grid = apply_boundary(grid, boundaries(distribution), first_time)
+        first_time = False
+    else:
+        values = new_values
+        new_grid = apply_boundary(grid, values, first_time)
+    
+    return new_grid, first_time
+
+
+def convergence(potential_old: float, potential_new: float) -> float:
+    """
+    Calculate the maximum change in the potential.
+    """
+    difference = np.max(np.abs(potential_new - potential_old))
+    return difference
+
+def jacobi(grid: list) -> list:
+    """
+    Generate an array that contains the potential inside a box of size N,
+    using an ansatz of 0 potential.
+    """
+    phi = np.copy(grid).reshape((const.N + 2, const.N + 2))
+
+    difference = 1
+
+    while difference > const.tolerance:
+
+        old = np.copy(phi)
+
+        phi[1:-1, 1:-1] = 0.25 * (
+                old[1:-1, 2:] +
+                old[1:-1, :-2] +
+                old[2:, 1:-1] +
+                old[:-2, 1:-1]
+                )
+
+        difference = convergence(old, phi)
+
+    print(phi)
+    return phi

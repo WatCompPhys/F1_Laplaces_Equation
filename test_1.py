@@ -1,5 +1,5 @@
 from particle_class import particle
-from potential_class import potential
+from Potential import potential
 from video import video
 import numpy as np 
 import constants
