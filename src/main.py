@@ -1,11 +1,12 @@
 import time
+import os
 import numpy as np
 import streamlit as st
-import constants as const
-import Potential
-from particle_class import particle
-from video import video
-from step_potential_switching import step_switching
+import src.constants as const
+import src.Potential as Potential
+from src.particle_class import particle
+from src.video import video
+from src.step_potential_switching import step_switching
 
 st.title("Particle in Box Simulation")
 
@@ -93,8 +94,6 @@ distribution = st.selectbox(
 )
 
 if st.button("Run Simulation"):
-    # Start the timer
-    start_time = time.perf_counter()
     with st.spinner("Running simulation..."):
 
         #Boundary Conditions
@@ -167,10 +166,6 @@ if st.button("Run Simulation"):
     st.success("Simulation complete!")
 
     # Display video
-    st.video("particle.mp4")
-
-    # Stop the timer
-    end_time = time.perf_counter()
-
-    elapsed_time = end_time - start_time
-    print(f"Executed in: {elapsed_time:.4f} seconds")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    video_path = os.path.join(script_dir, "particle.mp4")
+    st.video(video_path)

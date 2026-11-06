@@ -1,8 +1,8 @@
-from particle_class import particle
-from Potential import potential
-from video import video
+from src.particle_class import particle
+from src.Potential import potential
+from src.video import video
 import numpy as np 
-import constants
+import src.constants as constants
 import time
 
 #TEST 1: LAPLACIAN-FREE OF COMPUTED POTENTIAL FIELD 
