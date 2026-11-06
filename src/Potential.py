@@ -1,5 +1,5 @@
 import numpy as np
-import constants as const
+import src.constants as const
 
 def boundaries(distribution):
     """
@@ -68,26 +68,25 @@ def convergence(potential_old: float, potential_new: float) -> float:
     return difference
 
 def jacobi(grid: list) -> list:
-    """
-    Generate an array that contains the potential inside a box of size N,
-    using an ansatz of 0 potential.
-    """
     phi = np.copy(grid).reshape((const.N + 2, const.N + 2))
+    new_phi = np.empty_like(phi)
 
     difference = 1
 
     while difference > const.tolerance:
 
-        old = np.copy(phi)
+        new_phi[:] = phi
 
-        phi[1:-1, 1:-1] = 0.25 * (
-                old[1:-1, 2:] +
-                old[1:-1, :-2] +
-                old[2:, 1:-1] +
-                old[:-2, 1:-1]
-                )
+        new_phi[1:-1, 1:-1] = 0.25 * (
+            phi[1:-1, 2:] +
+            phi[1:-1, :-2] +
+            phi[2:, 1:-1] +
+            phi[:-2, 1:-1]
+        )
 
-        difference = convergence(old, phi)
+        difference = convergence(phi, new_phi)
+
+        phi, new_phi = new_phi, phi
 
     print(phi)
     return phi
