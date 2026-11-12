@@ -7,6 +7,7 @@ import src.Potential as Potential
 from src.particle_class import particle
 from src.video import video
 from src.step_potential_switching import step_switching
+from proportional_potential_control import linear_stepping, exponential_stepping
 
 st.title("Particle in Box Simulation")
 
@@ -24,7 +25,7 @@ const.tolerance = st.number_input(
     "Jacobi tolerance",
     min_value=1e-10,
     max_value=1e-2,
-    value=1e-7,
+    value=1e-4,
     format="%.1e"
 )
 
@@ -130,7 +131,7 @@ if st.button("Run Simulation"):
                and steps < max_steps
         ):
 
-            new_values = step_switching(x, y, x_0, y_0)
+            new_values = exponential_stepping(x, y, x_0, y_0, L)
             grid, first_time = Potential.get_values(distribution, grid, first_time, new_values)
 
             phi = Potential.jacobi(grid)
